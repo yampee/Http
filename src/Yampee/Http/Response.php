@@ -11,6 +11,8 @@
 
 /**
  * HTTP response
+ *
+ * @author Titouan Galopin <galopintitouan@gmail.com>
  */
 class Yampee_Http_Response
 {
@@ -116,8 +118,6 @@ class Yampee_Http_Response
 	 * @param string  $content The response content
 	 * @param integer $status  The response status code
 	 * @param array   $headers An array of response headers
-	 *
-	 * @api
 	 */
 	public function __construct($content = '', $status = 200, $headers = array())
 	{

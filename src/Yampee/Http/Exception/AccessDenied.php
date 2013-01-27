@@ -11,6 +11,8 @@
 
 /**
  * Access Denied HTTP exception
+ *
+ * @author Titouan Galopin <galopintitouan@gmail.com>
  */
 class Yampee_Http_Exception_AccessDenied extends Yampee_Http_Exception_General
 {

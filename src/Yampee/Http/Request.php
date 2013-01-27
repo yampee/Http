@@ -11,6 +11,8 @@
 
 /**
  * HTTP request
+ *
+ * @author Titouan Galopin <galopintitouan@gmail.com>
  */
 class Yampee_Http_Request
 {

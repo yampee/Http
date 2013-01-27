@@ -10,7 +10,9 @@
  */
 
 /**
- * Parameters collection.
+ * Parameters collection
+ *
+ * @author Titouan Galopin <galopintitouan@gmail.com>
  */
 class Yampee_Http_ParameterBag
 {
