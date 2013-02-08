@@ -10,50 +10,30 @@
  */
 
 /**
- * Simple sessions manager.
+ * Native session manager.
  *
  * @author Titouan Galopin <galopintitouan@gmail.com>
  */
-class Yampee_Http_Session
+class Yampee_Http_SessionStorage_Native implements Yampee_Http_SessionStorage_Interface
 {
 	/**
-	 * @var Yampee_Http_SessionStorage_Interface
-	 */
-	protected $storage;
-
-	/**
-	 * Constructor
-	 */
-	public function __construct()
-	{
-		$this->storage = new Yampee_Http_SessionStorage_Native();
-		$this->start();
-	}
-
-	/**
-	 * Destructor
-	 */
-	public function __destruct()
-	{
-		$this->close();
-	}
-
-	/**
-	 * @return Yampee_Http_Session
+	 * @return Yampee_Http_SessionStorage_Native
 	 */
 	public function start()
 	{
-		$this->storage->start();
+		if (! $this->isStarted()) {
+			session_start();
+		}
 
 		return $this;
 	}
 
 	/**
-	 * @return Yampee_Http_Session
+	 * @return Yampee_Http_SessionStorage_Native
 	 */
 	public function close()
 	{
-		$this->storage->close();
+		session_write_close();
 
 		return $this;
 	}
@@ -64,7 +44,7 @@ class Yampee_Http_Session
 	 */
 	public function has($name)
 	{
-		return $this->storage->has($name);
+		return isset($_SESSION['_attributes'][$name]);
 	}
 
 	/**
@@ -74,28 +54,34 @@ class Yampee_Http_Session
 	 */
 	public function get($name, $default = null)
 	{
-		return $this->storage->get($name, $default);
+		if (! $this->has($name)) {
+			return $default;
+		}
+
+		return $_SESSION['_attributes'][$name];
 	}
 
 	/**
 	 * @param string $name
 	 * @param mixed  $value
-	 * @return Yampee_Http_Session
+	 * @return Yampee_Http_SessionStorage_Native
 	 */
 	public function set($name, $value)
 	{
-		$this->storage->set($name, $value);
+		$_SESSION['_attributes'][$name] = $value;
 
 		return $this;
 	}
 
 	/**
 	 * @param string $name
-	 * @return Yampee_Http_Session
+	 * @return Yampee_Http_SessionStorage_Native
 	 */
 	public function remove($name)
 	{
-		$this->storage->remove($name);
+		if ($this->has($name)) {
+			unset($_SESSION['_attributes'][$name]);
+		}
 
 		return $this;
 	}
@@ -105,7 +91,7 @@ class Yampee_Http_Session
 	 */
 	public function all()
 	{
-		return $this->storage->all();
+		return $_SESSION['_attributes'];
 	}
 
 	/**
@@ -114,7 +100,7 @@ class Yampee_Http_Session
 	 */
 	public function hasFlash($name)
 	{
-		return $this->storage->hasFlash($name);
+		return isset($_SESSION['_flashes'][$name]);
 	}
 
 	/**
@@ -124,28 +110,38 @@ class Yampee_Http_Session
 	 */
 	public function getFlash($name, $default = null)
 	{
-		return $this->storage->getFlash($name, $default);
+		if (! $this->hasFlash($name)) {
+			return $default;
+		}
+
+		$value = $_SESSION['_flashes'][$name];
+
+		$this->removeFlash($name);
+
+		return $value;
 	}
 
 	/**
 	 * @param string $name
 	 * @param mixed  $value
-	 * @return Yampee_Http_Session
+	 * @return Yampee_Http_SessionStorage_Native
 	 */
 	public function setFlash($name, $value)
 	{
-		$this->storage->setFlash($name, $value);
+		$_SESSION['_flashes'][$name] = $value;
 
 		return $this;
 	}
 
 	/**
 	 * @param string $name
-	 * @return Yampee_Http_Session
+	 * @return Yampee_Http_SessionStorage_Native
 	 */
 	public function removeFlash($name)
 	{
-		$this->storage->removeFlash($name);
+		if ($this->hasFlash($name)) {
+			unset($_SESSION['_flashes'][$name]);
+		}
 
 		return $this;
 	}
@@ -155,7 +151,7 @@ class Yampee_Http_Session
 	 */
 	public function allFlashes()
 	{
-		return $this->storage->allFlashes();
+		return $_SESSION['_flashes'];
 	}
 
 	/**
@@ -163,25 +159,6 @@ class Yampee_Http_Session
 	 */
 	public function isStarted()
 	{
-		return $this->storage->isStarted();
-	}
-
-	/**
-	 * @return Yampee_Http_SessionStorage_Interface
-	 */
-	public function getStorage()
-	{
-		return $this->storage;
-	}
-
-	/**
-	 * @param Yampee_Http_SessionStorage_Interface $storage
-	 * @return Yampee_Http_Session
-	 */
-	public function setStorage(Yampee_Http_SessionStorage_Interface $storage)
-	{
-		$this->storage = $storage;
-
-		return $this;
+		return session_id() != '';
 	}
 }
