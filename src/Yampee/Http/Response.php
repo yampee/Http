@@ -125,7 +125,7 @@ class Yampee_Http_Response
 
 		$this->setContent($content);
 		$this->setStatusCode($status);
-		$this->setVersion('1.0');
+		$this->setVersion('1.1');
 		$this->setCharset('UTF-8');
 
 		if(isset(self::$statusTexts[$status])) {
@@ -149,10 +149,8 @@ class Yampee_Http_Response
 		header(sprintf('HTTP/%s %s %s', $this->version, $this->statusCode, $this->statusText));
 
 		// headers
-		foreach($this->headers->all() as $name => $values) {
-			foreach($values as $value) {
-				header($name.': '.$value, false);
-			}
+		foreach($this->headers->all() as $name => $value) {
+			header($name.': '.$value, false);
 		}
 
 		return $this;

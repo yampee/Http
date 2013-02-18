@@ -25,8 +25,8 @@ class Yampee_Http_Bridge_Annotation_Cache extends Yampee_Annotations_Definition_
 	 * Annotation parameters
 	 */
 	public $public = false;
-	public $maxAge;
-	public $mustRevalidate = true;
+	public $maxAge = 300;
+	public $mustRevalidate = false;
 
 	/**
 	 * Constructor
@@ -76,7 +76,7 @@ class Yampee_Http_Bridge_Annotation_Cache extends Yampee_Annotations_Definition_
 	 */
 	public function getAnnotationName()
 	{
-		return 'Cache';
+		return 'HttpCache';
 	}
 
 	/**
